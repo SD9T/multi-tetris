@@ -188,9 +188,7 @@ int main(void) {
 							moveBlock(DOWN, &currentBlock);
 						timer = -1; // to stop the loop
 					}
-					currentBlock.x += 20;
 					drawBlock(currentBlock, SOFT_BLOCK);
-					currentBlock.x -= 20;
 				}
 			}
 		}
