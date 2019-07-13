@@ -62,6 +62,7 @@ void gotoyx(int y, int x) {
 }
 
 void createRandomBlock(struct block* b);
+void initBlock(struct block* b);
 void drawPreparingBlock(struct block b);
 void drawHoldingBlock(struct block b);
 void drawBlock(struct block b, enum blockState type);
@@ -235,6 +236,9 @@ int main(void) {
 void createRandomBlock(struct block* b) {
 	b->id = rand() % 7;
 	b->rotationState = rand() % 4;
+	initBlock(b);
+}
+void initBlock(struct block* b) {
 	b->y = 2;
 	b->x = 4;
 }
