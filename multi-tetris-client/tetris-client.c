@@ -369,3 +369,31 @@ void printStageOfOpponent(int stage) {
 	gotoyx(16, 66);
 	printf("Stage: %d", stage);
 }
+void handleSocket(char msg[], struct block b) {
+	struct block opponent = makeOpponentBlock(b);
+	switch (msg[0]) {
+	case 'n': // multiplayer load new block
+		b.id = msg[2] - '0';
+		b.rotationState = msg[4] - '0';
+		initBlock(&b);
+		break;
+	case 'r': // multiplayer rotate block
+		switch (msg[2]) {
+		case '0': // turn left
+			if (!b.rotationState)
+				b.rotationState = 3;
+			else
+				b.rotationState--;
+			break;
+		case '1': // turn right
+			b.rotationState++;
+			b.rotationState %= 4;
+		}
+		break;
+	case 'm': // multiplayer move block
+		moveBlock(msg[2] - '0', &b);
+	}
+	eraseBlock(opponent);
+	opponent = b;
+	drawBlock(opponent, SOFT_BLOCK);
+}
