@@ -74,7 +74,7 @@ void rePrintMapTo(enum blockState map[24][12], int y);
 void printScore(int score);
 void printStage(int stage);
 void loadNextBlock(struct block* currentBlock, struct block* preparingBlock);
-//additional handlings for opponent
+//additional functions for opponent
 void handleSocket(char msg[]);
 struct block makeOpponentBlock(struct block b);
 void printScoreOfOpponent(int score);
