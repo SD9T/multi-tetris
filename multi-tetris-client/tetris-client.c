@@ -394,6 +394,6 @@ void handleSocket(char msg[], struct block b) {
 		moveBlock(msg[2] - '0', &b);
 	}
 	eraseBlock(opponent);
-	opponent = b;
+	opponent = makeOpponentBlock(b);
 	drawBlock(opponent, SOFT_BLOCK);
 }
