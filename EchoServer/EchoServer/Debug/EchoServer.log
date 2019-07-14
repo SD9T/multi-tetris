@@ -1,3 +1,2 @@
 ﻿  EchoServer.c
-C:\Users\전대식\source\repos\EchoServer\EchoServer\EchoServer.c(15): warning C4101: 'i' :참조되지 않은 지역 변수입니다.
-  EchoServer.vcxproj -> C:\Users\전대식\source\repos\EchoServer\Debug\EchoServer.exe
+  EchoServer.vcxproj -> C:\Users\전대식\Desktop\C\Project\EchoServer\Debug\EchoServer.exe

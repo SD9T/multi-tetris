@@ -1,73 +1,58 @@
 #include <stdio.h>
 #include <conio.h>
 #include <WinSock2.h>
+#include <WS2tcpip.h>
 
 #pragma comment(lib, "ws2_32.lib")
 
+#define MSG_SIZE 9999
+
 void error(const char* msg);
 
-int main(int argc, char *argv[])
+void main()
 {
-	puts(argv[0]);
-	SOCKET sockServer, sockClient;
+	SOCKET s, cs;
 	SOCKADDR_IN server, client;
 	WSADATA wsaData;
-	int clientSize, i, recvRetValue;
-	char buffer[9999];
+	int recvRetValue, clientSize;
+	char buffer[MSG_SIZE];
 
 	WSAStartup(MAKEWORD(2, 2), &wsaData);
-	sockServer = socket(AF_INET, SOCK_STREAM, 0);
+	s = socket(AF_INET, SOCK_STREAM, 0);
 
-	if (sockServer == INVALID_SOCKET)
-	{
+	if (s == INVALID_SOCKET)
 		error("socket");
-	}
 	server.sin_family = AF_INET;
 	server.sin_port = htons(10000);
 	server.sin_addr.s_addr = htonl(ADDR_ANY);
-	if (bind(sockServer, (SOCKADDR*)& server, sizeof(server)) == SOCKET_ERROR)
-	{
+	if (bind(s, (SOCKADDR*)& server, sizeof(server)) == SOCKET_ERROR)
 		error("bind");
-	}
-	if (listen(sockServer, SOMAXCONN) != 0)
-	{
+	if (listen(s, SOMAXCONN) != 0)
 		error("listen");
-	}
 
-	puts("클라이언트로 부터 접속 대기중...");
-	// for (i = 0; i < 2; i++)
-	{
-		clientSize = sizeof(client);
-		sockClient = accept(sockServer, (SOCKADDR*)& client, &clientSize);
-		if (sockClient == INVALID_SOCKET)
-		{
-			error("socket");
-		}
-	}
+	clientSize = sizeof(client);
+	cs = accept(s, (SOCKADDR*)& client, &clientSize);
+	if (cs == INVALID_SOCKET)
+		error("accept");
+
+	puts("Clients log...");
 	for (;;)
 	{
-		memset(buffer, 0, sizeof(buffer));
-		// for (;;)
-		recvRetValue = recv(sockClient, buffer, sizeof(buffer), 0);
-		if (recvRetValue == SOCKET_ERROR)
-			goto error;
-	    if (recvRetValue == 0)
-			goto normal;
+		memset(buffer, 0, MSG_SIZE);
+		recvRetValue = recv(cs, buffer, MSG_SIZE, 0);
+		if (recvRetValue == 0 || recvRetValue == SOCKET_ERROR)
+			break;
 		puts(buffer);
-		send(sockClient, buffer, recvRetValue, 0);
+		send(cs, buffer, recvRetValue, 0);
 	}
-error:
-	closesocket(sockServer);
+	closesocket(s);
 	WSACleanup();
-	return -1;
-normal:
-	closesocket(sockServer);
-	WSACleanup();
-	return 0;
+	exit(0);
 }
 
 void error(const char* msg)
 {
 	printf("%d %s error\n", WSAGetLastError(), msg);
 	WSACleanup();
+	exit(0);
 }
