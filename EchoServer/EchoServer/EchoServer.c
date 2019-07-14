@@ -5,7 +5,7 @@
 
 #pragma comment(lib, "ws2_32.lib")
 
-#define MSG_SIZE 9999
+#define BUFFER_SIZE 9999
 
 void error(const char* msg);
 
@@ -15,7 +15,7 @@ void main()
 	SOCKADDR_IN server, client;
 	WSADATA wsaData;
 	int recvRetValue, clientSize;
-	char buffer[MSG_SIZE];
+	char buffer[BUFFER_SIZE];
 
 	WSAStartup(MAKEWORD(2, 2), &wsaData);
 	s = socket(AF_INET, SOCK_STREAM, 0);
@@ -30,20 +30,20 @@ void main()
 	if (listen(s, SOMAXCONN) != 0)
 		error("listen");
 
+	puts("Waiting for clients...");
 	clientSize = sizeof(client);
 	cs = accept(s, (SOCKADDR*)& client, &clientSize);
 	if (cs == INVALID_SOCKET)
 		error("accept");
 
-	puts("Clients log...");
 	for (;;)
 	{
-		memset(buffer, 0, MSG_SIZE);
-		recvRetValue = recv(cs, buffer, MSG_SIZE, 0);
+		memset(buffer, 0, BUFFER_SIZE);
+		recvRetValue = recv(cs, buffer, BUFFER_SIZE, 0);
 		if (recvRetValue == 0 || recvRetValue == SOCKET_ERROR)
 			break;
 		puts(buffer);
-		send(cs, buffer, recvRetValue, 0);
+		send(cs, buffer, BUFFER_SIZE, 0);
 	}
 	closesocket(s);
 	WSACleanup();
